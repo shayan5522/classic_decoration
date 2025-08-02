@@ -38,7 +38,7 @@ const categories = [
 
 export default function ShopByCategories() {
     return (
-        <section className="py-16 bg-white text-center">
+        <section id="categories" className="py-16 bg-white text-center">
             <h2 className="text-3xl font-bold text-gray-800 mb-12 relative inline-block">
                 Shop By <span className="text-[#D4AF37]">Categories</span>
                 <div className="absolute left-0 right-0 h-1 bg-[#D4AF37] w-3/4 mx-auto top-full mt-2 rounded-full" />

@@ -16,14 +16,16 @@ export default function Navbar() {
                 <nav className="hidden md:flex space-x-10 text-base font-bold text-black">
                     <Link href="/">Home</Link>
                     <Link href="#">Shop</Link>
-                    <Link href="#">Categories</Link>
-                    <Link href="#">FAQs</Link>
+                    <Link href="/#categories" scroll={true}>
+                        Categories
+                    </Link>
+                    <Link href="/faqs">FAQs</Link>
                 </nav>
 
                 {/* Buttons */}
                 <div className="flex items-center gap-3">
                     <Link
-                        href="#"
+                        href="/contact"
                         className="bg-yellow-600 text-white px-4 py-2 rounded font-semibold text-sm shadow-sm hover:bg-yellow-700 transition"
                     >
                         Contact Us

@@ -43,9 +43,9 @@ export default function Footer() {
                             { name: "Home", href: "/" },
                             { name: "About Us", href: "/about" },
                             { name: "Contact Us", href: "/contact" },
-                            { name: "FAQs", href: "/faqs" },
+                            { name: "Faqs", href: "/faqs" },
                             { name: "Order Tracking", href: "/order-tracking" },
-                            { name: "Privacy Policy", href: "/privacy-policy" },
+                            { name: "Privacy Policy", href: "/privacy_policy" },
                             { name: "Terms and Conditions", href: "/terms" },
                         ].map((link) => (
                             <li key={link.name}>

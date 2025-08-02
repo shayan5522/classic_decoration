@@ -10,13 +10,11 @@ import PopularProducts from "@/components/dashboard/PopularProducts";
 export default function Home() {
     return (
         <>
-            <Navbar />
             <Hero />
             <ShopByCategories />
             <PopularProducts />
             <InstagramSection />
             <Testimonials />
-            <Footer />
         </>
     );
 }
