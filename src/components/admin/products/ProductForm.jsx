@@ -59,12 +59,30 @@ export default function ProductForm({ initialData, onClose, onSave }) {
                         required
                     />
                     <input
-                        type="text"
-                        placeholder="Image URL"
-                        value={image}
-                        onChange={(e) => setImage(e.target.value)}
+                        type="file"
+                        accept="image/*"
+                        onChange={async (e) => {
+                            const file = e.target.files?.[0];
+                            if (!file) return;
+
+                            const formData = new FormData();
+                            formData.append("image", file);
+
+                            const res = await fetch("/api/upload", {
+                                method: "POST",
+                                body: formData,
+                            });
+
+                            const data = await res.json();
+                            if (data.url) {
+                                setImage(data.url); // Store Cloudinary URL
+                            } else {
+                                alert("Image upload failed");
+                            }
+                        }}
                         className="w-full border p-2 rounded"
                     />
+
 
                     <select
                         value={categoryId}
