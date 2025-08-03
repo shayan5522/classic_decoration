@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+}
+
+model Category {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  products  Product[]
+  createdAt DateTime  @default(now())
+}
+
+model Product {
+  id          Int      @id @default(autoincrement())
+  name        String
+  price       Float
+  image       String?
+  description String?
+  categoryId  Int
+  category    Category @relation(fields: [categoryId], references: [id])
+  orders      Order[]
+  createdAt   DateTime @default(now())
+}
+
+model Banner {
+  id        Int      @id @default(autoincrement())
+  image     String
+  link      String?
+  createdAt DateTime @default(now())
+}
+
+model Order {
+  id            Int      @id @default(autoincrement())
+  customerName  String
+  customerEmail String
+  phone         String
+  productId     Int
+  product       Product  @relation(fields: [productId], references: [id])
+  advanceAmount Float // 0.25% of product price
+  proofImage    String // Screenshot of payment
+  status        String   @default("pending") // pending | confirmed | completed | rejected
+  createdAt     DateTime @default(now())
+}
+
+model Inquiry {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String
+  message   String
+  createdAt DateTime @default(now())
+}
