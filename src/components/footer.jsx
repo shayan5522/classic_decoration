@@ -82,13 +82,14 @@ export default function Footer() {
                     <h4 className="text-[#D4AF37] font-semibold text-lg mb-4">Location</h4>
                     <div className="w-full h-40 overflow-hidden rounded-lg shadow-lg">
                         <iframe
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d26429.448273624494!2d73.0158258!3d33.6282236!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38df950a241c6eeb%3A0x5e5d6e4c5c99f191!2sWaleed%20Party%20Decoration!5e0!3m2!1sen!2s!4v1661323579094!5m2!1sen!2s"
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d179.30044199293405!2d73.75960864385456!3d33.86006055153941!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38e06b1b81a52a3b%3A0x3d2bcb60a0f9ceed!2sQuaid-e-Azam%20Market%20Rawalakot%20a!5e1!3m2!1sen!2sus!4v1754204801477!5m2!1sen!2sus"
                             className="w-full h-full border-0 rounded-md"
                             allowFullScreen
                             loading="lazy"
                             referrerPolicy="no-referrer-when-downgrade"
                         ></iframe>
                     </div>
+
                 </div>
             </div>
         </footer>
