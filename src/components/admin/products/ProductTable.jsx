@@ -8,6 +8,7 @@ export default function ProductTable({ products, onDelete, onEdit }) {
                 <th className="p-2 border">Price</th>
                 <th className="p-2 border">Image</th>
                 <th className="p-2 border">Category</th>
+                <th className="p-2 border">Description</th> {/* New header */}
                 <th className="p-2 border">Actions</th>
             </tr>
             </thead>
@@ -19,11 +20,18 @@ export default function ProductTable({ products, onDelete, onEdit }) {
                     <td className="p-2 border">Rs {product.price}</td>
                     <td className="p-2 border">
                         {product.image && (
-                            <img src={product.image} alt={product.name} className="w-16 h-16 object-cover" />
+                            <img
+                                src={product.image}
+                                alt={product.name}
+                                className="w-16 h-16 object-cover"
+                            />
                         )}
                     </td>
                     <td className="p-2 border">
                         {product.category?.name || 'Uncategorized'}
+                    </td>
+                    <td className="p-2 border max-w-xs truncate">
+                        {product.description || 'N/A'} {/* Show description */}
                     </td>
                     <td className="p-2 border">
                         <button

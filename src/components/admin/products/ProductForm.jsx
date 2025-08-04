@@ -6,11 +6,11 @@ export default function ProductForm({ initialData, onClose, onSave }) {
     const [name, setName] = useState(initialData?.name || '');
     const [price, setPrice] = useState(initialData?.price || '');
     const [image, setImage] = useState(initialData?.image || '');
+    const [description, setDescription] = useState(initialData?.description || '');
     const [categoryId, setCategoryId] = useState(initialData?.categoryId || '');
     const [categories, setCategories] = useState([]);
 
     useEffect(() => {
-        // Fetch categories from API
         const fetchCategories = async () => {
             const res = await fetch('/api/categories');
             const data = await res.json();
@@ -28,7 +28,7 @@ export default function ProductForm({ initialData, onClose, onSave }) {
         await fetch(url, {
             method,
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, price, image, categoryId }),
+            body: JSON.stringify({ name, price, image, categoryId, description }),
         });
 
         onSave();
@@ -50,6 +50,7 @@ export default function ProductForm({ initialData, onClose, onSave }) {
                         className="w-full border p-2 rounded"
                         required
                     />
+
                     <input
                         type="number"
                         placeholder="Price"
@@ -58,6 +59,14 @@ export default function ProductForm({ initialData, onClose, onSave }) {
                         className="w-full border p-2 rounded"
                         required
                     />
+
+                    <textarea
+                        placeholder="Product description"
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                        className="w-full border p-2 rounded min-h-[100px]"
+                    />
+
                     <input
                         type="file"
                         accept="image/*"
@@ -75,14 +84,13 @@ export default function ProductForm({ initialData, onClose, onSave }) {
 
                             const data = await res.json();
                             if (data.url) {
-                                setImage(data.url); // Store Cloudinary URL
+                                setImage(data.url);
                             } else {
                                 alert("Image upload failed");
                             }
                         }}
                         className="w-full border p-2 rounded"
                     />
-
 
                     <select
                         value={categoryId}

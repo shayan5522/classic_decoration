@@ -15,7 +15,7 @@ export async function GET(_, { params }) {
 // UPDATE product
 export async function PUT(req, { params }) {
     const body = await req.json();
-    const { name, price, image, categoryId } = body;
+    const { name, price, image, categoryId, description } = body;
 
     const updated = await prisma.product.update({
         where: { id: parseInt(params.id) },
@@ -24,11 +24,13 @@ export async function PUT(req, { params }) {
             price: parseFloat(price),
             image,
             categoryId: categoryId ? parseInt(categoryId) : undefined,
+            description, // 👈 update description too
         },
     });
 
     return NextResponse.json(updated);
 }
+
 
 // DELETE product
 export async function DELETE(_, { params }) {
