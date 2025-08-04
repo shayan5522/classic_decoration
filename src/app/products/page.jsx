@@ -1,46 +1,63 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
-
-const categories = ['All', 'Balloons', 'Backdrops', 'Lights', 'Table Decor', 'Props', 'Wall Decor'];
-
-const products = [
-    {
-        title: 'Golden Balloon Set',
-        price: 1500,
-        image: '/assets/balloons.jpg',
-    },
-    {
-        title: 'Birthday Backdrop',
-        price: 3200,
-        image: '/assets/backdrop.jpg',
-    },
-    {
-        title: 'LED Fairy Lights',
-        price: 850,
-        image: '/assets/lights.jpg',
-    },
-    {
-        title: 'Table Decor Kit',
-        price: 1000,
-        image: '/assets/table.jpg',
-    },
-    // Add more if needed
-];
+import Link from 'next/link';
 
 export default function ProductsPage() {
+    const [products, setProducts] = useState([]);
+    const [categories, setCategories] = useState([{ name: 'All' }]);
     const [selectedCategory, setSelectedCategory] = useState('All');
     const [sortBy, setSortBy] = useState('price');
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchAll = async () => {
+            try {
+                const [productsRes, categoriesRes] = await Promise.all([
+                    fetch('/api/products'),
+                    fetch('/api/categories'),
+                ]);
+
+                const productsData = await productsRes.json();
+                const categoriesData = await categoriesRes.json();
+
+                console.log('🧾 Products fetched:', productsData);
+                console.log('📂 Categories fetched:', categoriesData);
+
+                const ids = productsData.map((p) => p.id);
+                const duplicates = ids.filter((id, index) => ids.indexOf(id) !== index);
+                if (duplicates.length > 0) {
+                    console.warn('⚠️ Duplicate product IDs found:', duplicates);
+                }
+
+                setProducts(productsData);
+                setCategories([{ name: 'All' }, ...categoriesData]);
+            } catch (err) {
+                console.error('❌ Failed to fetch products or categories:', err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchAll();
+    }, []);
 
     const filteredProducts =
         selectedCategory === 'All'
             ? products
-            : products.filter((p) => p.title.toLowerCase().includes(selectedCategory.toLowerCase()));
+            : products.filter(
+                (p) =>
+                    p.category?.name?.toLowerCase() === selectedCategory.toLowerCase()
+            );
 
-    const sortedProducts = [...filteredProducts].sort((a, b) => {
-        return sortBy === 'price' ? a.price - b.price : a.title.localeCompare(b.title);
-    });
+    const sortedProducts = [...filteredProducts].sort((a, b) =>
+        sortBy === 'price' ? a.price - b.price : a.name.localeCompare(b.name)
+    );
+
+    if (loading) {
+        return <div className="text-center py-10">Loading products...</div>;
+    }
 
     return (
         <div className="px-6 md:px-16 py-12 bg-white min-h-screen">
@@ -53,15 +70,15 @@ export default function ProductsPage() {
                 <div className="flex flex-wrap gap-3">
                     {categories.map((cat) => (
                         <button
-                            key={cat}
-                            onClick={() => setSelectedCategory(cat)}
+                            key={cat.name}
+                            onClick={() => setSelectedCategory(cat.name)}
                             className={`px-4 py-2 rounded-full border ${
-                                selectedCategory === cat
+                                selectedCategory === cat.name
                                     ? 'bg-[#D4AF37] text-white'
                                     : 'bg-white border-gray-300 text-gray-700'
                             } hover:shadow-md transition`}
                         >
-                            {cat}
+                            {cat.name}
                         </button>
                     ))}
                 </div>
@@ -79,23 +96,33 @@ export default function ProductsPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
                 {sortedProducts.map((product, index) => (
                     <div
-                        key={index}
+                        key={`${product.id}-${index}`}
                         className="border rounded-lg shadow-sm hover:shadow-lg transition overflow-hidden"
                     >
                         <Image
-                            src={product.image}
-                            alt={product.title}
+                            src={
+                                product.image && product.image.trim() !== ''
+                                    ? product.image
+                                    : '/assets/placeholder.jpg'
+                            }
+                            alt={product.name}
                             width={400}
                             height={300}
                             className="w-full h-56 object-cover"
                         />
 
                         <div className="p-4 space-y-2">
-                            <h3 className="text-lg font-bold text-gray-800">{product.title}</h3>
+                            <h3 className="text-lg font-bold text-gray-800">
+                                {product.name}
+                            </h3>
                             <p className="text-gray-600 font-medium">Rs. {product.price}</p>
-                            <button className="mt-2 bg-[#D4AF37] text-white font-semibold px-4 py-2 rounded hover:bg-[#b6982f] transition">
-                                View Details
-                            </button>
+                                <Link
+                                    href={`/products/${product.id}`}
+                                    className="mt-2 inline-block bg-[#D4AF37] text-white font-semibold px-4 py-2 rounded hover:bg-[#b6982f] transition"
+                                >
+                                    View Details
+
+                            </Link>
                         </div>
                     </div>
                 ))}
