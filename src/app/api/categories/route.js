@@ -1,3 +1,4 @@
+export const revalidate = 3600;
 import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 
@@ -11,12 +12,18 @@ export async function GET() {
         const categories = await prisma.category.findMany({
             orderBy: { createdAt: 'desc' },
         });
-        return NextResponse.json(categories);
+
+        return NextResponse.json(categories, {
+            status: 200,
+            // Optional: set caching headers manually too (defensive)
+            headers: {
+                'Cache-Control': 'public, max-age=3600, stale-while-revalidate=60',
+            },
+        });
     } catch (error) {
         console.error('❌ Error fetching categories:', error);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
-    }
-}
+    }}
 
 // POST a new category
 export async function POST(req) {

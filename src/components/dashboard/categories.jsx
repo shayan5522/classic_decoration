@@ -5,9 +5,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 const categoryImages = {
-    'Wedding items': '/assets/wedding.jpg',
-    'Birthday items': '/assets/birthday.jpg',
-    'Festival items': '/assets/festival.jpg',
+    'Mehndi Accessories': '/assets/festival.jpg',
+    'Birthday Accessories': '/assets/birthday.jpg',
+    'Barat Accessories': '/assets/wedding.jpg',
     'Nikah Accessories': '/assets/nikah.jpg',
     'Gift Boxes': '/assets/gift_boxes.jpg',
     'Neon Boards': '/assets/neon_boards.jpg',

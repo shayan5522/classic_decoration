@@ -24,7 +24,10 @@ export default function OrderPage() {
                 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
                 const res = await fetch(`${baseUrl}/api/products/${id}`);
                 const data = await res.json();
-                setProduct(data);
+                console.log("Fetched product data:", data);
+
+                setProduct(Array.isArray(data) ? data[0] : data);
+
             } catch (error) {
                 console.error('Failed to fetch product:', error);
             }
@@ -84,17 +87,19 @@ export default function OrderPage() {
                 <div className="flex flex-col md:flex-row items-center gap-6">
                     <div className="relative w-40 h-40 rounded-md overflow-hidden border">
                         <Image
-                            src={product.image || '/assets/placeholder.jpg'}
+                            src={product.image}
                             alt={product.name}
                             fill
                             className="object-contain"
+                            onError={(e) => e.currentTarget.src = '/assets/placeholder.jpg'}
                         />
+
                     </div>
                     <div className="text-center md:text-left">
                         <h2 className="text-xl font-semibold">{product.name}</h2>
                         <p className="text-gray-600">Price: Rs. {product.price}</p>
                         <p className="text-yellow-600 font-semibold">
-                            Advance (25%): Rs. {advanceAmount}
+                            Advance (5%): Rs. {advanceAmount}
                         </p>
                     </div>
                 </div>
