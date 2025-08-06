@@ -4,14 +4,15 @@ import Image from 'next/image';
 import { notFound } from 'next/navigation';
 
 export default async function ProductPage({ params }) {
-    const { id } = await Promise.resolve(params);
-
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+    const { id } = params;
 
     let product = null;
 
     try {
-        const res = await fetch(`${baseUrl}/api/products/${id}`, { cache: 'no-store' });
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/products/${id}`, {
+            cache: 'no-store',
+        });
+
         if (!res.ok) return notFound();
 
         const json = await res.json();
