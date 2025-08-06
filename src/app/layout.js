@@ -4,6 +4,7 @@ import { Poppins } from "next/font/google";
 import LayoutWrapper from "@/components/LayoutWrapper";
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
+import FloatingWhatsapp from "@/components/FloatingWhatsapp";
 
 const poppins = Poppins({
     subsets: ["latin"],
@@ -37,6 +38,7 @@ export default function RootLayout({ children }) {
         >
         <LayoutWrapper>{children}</LayoutWrapper>
         <ToastContainer position="top-center" />
+        <FloatingWhatsapp/>
         </body>
         </html>
     );

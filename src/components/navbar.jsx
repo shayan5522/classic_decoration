@@ -25,9 +25,10 @@ export default function Navbar() {
     return (
         <header className="bg-white border border-gray-200 shadow-lg rounded-md mt-4 mx-4 mb-6 z-50 relative">
             <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-                {/* Logo */}
                 <Link href="/" className="flex items-center space-x-2">
-                    <Image src="/logo.png" alt="Logo" width={30} height={30} />
+                <span className="text-1xl font-extrabold tracking-wide text-[#D4AF37] drop-shadow-sm">
+                 Classic <span className="text-gray-800">Decoration</span>
+                </span>
                 </Link>
 
                 {/* Desktop Nav Links */}

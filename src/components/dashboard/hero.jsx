@@ -1,5 +1,6 @@
 'use client';
 import Image from 'next/image';
+import Link from "next/link";
 
 export default function Hero() {
     return (
@@ -21,9 +22,14 @@ export default function Hero() {
                 <p className="text-lg md:text-xl mb-8 drop-shadow-sm">
                     Discover timeless decor pieces crafted to inspire elegance and warmth.
                 </p>
-                <button className="px-6 py-3 bg-yellow-500 text-black rounded-full font-semibold hover:bg-yellow-600 transition">
+
+                <Link
+                    href="/#categories"
+                    scroll={true}
+                    className="inline-block bg-[#D4AF37] text-white font-semibold px-6 py-3 rounded-full shadow-lg hover:bg-[#b6982f] transition duration-300"
+                >
                     Explore Collection
-                </button>
+                </Link>
             </div>
 
             {/* Gradient overlay */}

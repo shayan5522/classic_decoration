@@ -16,8 +16,7 @@ export default function Footer() {
                 {/* Logo & Description */}
                 <div>
                     <div className="flex items-center mb-5">
-                        <Image src="/logo.png" alt="Logo" width={45} height={45} />
-                        <span className="ml-3 text-xl font-bold text-[#D4AF37]">
+                        <span className="ml-0 text-xl font-bold text-[#D4AF37]">
                             Classic Decoration
                         </span>
                     </div>
@@ -27,11 +26,30 @@ export default function Footer() {
                         diverse range of decoration items brings joy and elegance to every occasion.
                     </p>
                     <div className="flex space-x-4 mt-5 text-[#D4AF37] text-2xl">
-                        <FaFacebookF className="hover:text-white transition duration-300 cursor-pointer" />
-                        <FaInstagram className="hover:text-white transition duration-300 cursor-pointer" />
-                        <FaSnapchatGhost className="hover:text-white transition duration-300 cursor-pointer" />
-                        <FaTiktok className="hover:text-white transition duration-300 cursor-pointer" />
-                        <FaYoutube className="hover:text-white transition duration-300 cursor-pointer" />
+                        <a
+                            href="https://www.facebook.com/profile.php?id=61578206965261"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="hover:text-white transition duration-300"
+                        >
+                            <FaFacebookF className="cursor-pointer" />
+                        </a>
+                        <a
+                            href="https://www.instagram.com/classicdecor87/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="hover:text-white transition duration-300"
+                        >
+                            <FaInstagram className="cursor-pointer" />
+                        </a>
+                        <a
+                            href="https://www.tiktok.com/@classicdecorr?_t=ZS-8yJUuDMsOdb&_r=1"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="hover:text-white transition duration-300"
+                        >
+                            <FaTiktok className="cursor-pointer" />
+                        </a>
                     </div>
                 </div>
 
