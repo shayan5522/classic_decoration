@@ -44,7 +44,6 @@ export default function Footer() {
                             { name: "About Us", href: "/about" },
                             { name: "Contact Us", href: "/contact" },
                             { name: "Faqs", href: "/faqs" },
-                            { name: "Order Tracking", href: "/order-tracking" },
                             { name: "Privacy Policy", href: "/privacy_policy" },
                             { name: "Terms and Conditions", href: "/terms" },
                         ].map((link) => (
@@ -63,10 +62,10 @@ export default function Footer() {
                     <p className="text-sm text-gray-300 mb-2">
                         Email:{" "}
                         <a
-                            href="mailto:support@classicdecor.com"
+                            href="mailto:classicdecoration111@gmail.com"
                             className="text-[#D4AF37] hover:underline"
                         >
-                            Support@ClassicDecoration.com
+                            classicdecoration111@gmail.com
                         </a>
                     </p>
                     <p className="text-sm text-gray-300">
