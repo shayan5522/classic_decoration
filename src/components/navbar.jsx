@@ -58,13 +58,16 @@ export default function Navbar() {
                     >
                         Contact Us
                     </Link>
-                    <Link
-                        href="#"
+                    <a
+                        href="https://wa.me/923369364016"
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="flex items-center bg-yellow-100 text-yellow-600 px-4 py-2 rounded font-semibold text-sm shadow-sm hover:bg-yellow-200 transition"
                     >
                         <FiPhoneCall className="mr-2" />
                         Whatsapp Us
-                    </Link>
+                    </a>
+
                 </div>
 
                 {/* Hamburger Icon for Mobile */}
@@ -106,14 +109,16 @@ export default function Navbar() {
                         >
                             Contact Us
                         </Link>
-                        <Link
-                            href="#"
-                            onClick={() => setIsOpen(false)}
-                            className="flex items-center justify-center bg-yellow-100 text-yellow-600 px-4 py-2 rounded font-semibold text-sm shadow-sm hover:bg-yellow-200 transition"
+                        <a
+                            href="https://wa.me/923369364016"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center bg-yellow-100 text-yellow-600 px-4 py-2 rounded font-semibold text-sm shadow-sm hover:bg-yellow-200 transition"
                         >
                             <FiPhoneCall className="mr-2" />
                             Whatsapp Us
-                        </Link>
+                        </a>
+
                     </div>
                 </div>
             )}
