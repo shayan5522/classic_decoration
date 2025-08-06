@@ -1,22 +1,47 @@
 import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 
-// GET all products
-export async function GET() {
-    const products = await prisma.product.findMany({
-        include: { category: true },
-        orderBy: { createdAt: 'desc' },
-    });
-    return NextResponse.json(products);
+// GET all products or filter by category
+export async function GET(req) {
+    try {
+        const { searchParams } = new URL(req.url);
+        const categoryName = searchParams.get('category'); // ?category=Gift Boxes
+
+        let whereCondition = undefined;
+        if (categoryName) {
+            whereCondition = {
+                category: {
+                    name: {
+                        equals: categoryName,
+                        mode: 'insensitive',
+                    },
+                },
+            };
+        }
+
+        const products = await prisma.product.findMany({
+            where: whereCondition,
+            include: { category: true },
+            orderBy: { createdAt: 'desc' },
+        });
+
+        return NextResponse.json(products);
+    } catch (error) {
+        console.error('GET /api/products error:', error);
+        return NextResponse.json(
+            { error: 'Failed to fetch products.' },
+            { status: 500 }
+        );
+    }
 }
 
-// POST new product
+// POST a new product
 export async function POST(req) {
     try {
         const body = await req.json();
         const { name, price, image, description, categoryId } = body;
 
-        // Validate input
+        // Validate required fields
         if (!name || !price || !categoryId) {
             return NextResponse.json(
                 { error: 'Name, price, and categoryId are required.' },
@@ -24,7 +49,7 @@ export async function POST(req) {
             );
         }
 
-        // Check if category exists
+        // Ensure category exists
         const category = await prisma.category.findUnique({
             where: { id: parseInt(categoryId) },
         });
@@ -36,7 +61,7 @@ export async function POST(req) {
             );
         }
 
-        // Create product
+        // Create the product
         const newProduct = await prisma.product.create({
             data: {
                 name,

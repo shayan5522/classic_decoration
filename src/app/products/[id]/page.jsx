@@ -1,45 +1,29 @@
-'use client';
-import { notFound, useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { notFound } from 'next/navigation';
 
-export default function ProductDetail({ params }) {
-    const id = params.id;
-    const router = useRouter();
-    const [product, setProduct] = useState(null);
-    const [loading, setLoading] = useState(true);
+export default async function ProductPage({ params }) {
+    const { id } = await Promise.resolve(params);
 
-    useEffect(() => {
-        const getProduct = async () => {
-            try {
-                const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-                const res = await fetch(`${baseUrl}/api/products/${id}`, {
-                    cache: 'no-store',
-                });
-                if (!res.ok) return notFound();
-                const data = await res.json();
-                setProduct(data);
-            } catch (err) {
-                console.error('❌ Error fetching product:', err);
-                notFound();
-            } finally {
-                setLoading(false);
-            }
-        };
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
 
-        if (id) getProduct();
-    }, [id]);
+    let product = null;
 
-    if (loading || !product) {
-        return <div className="p-10 text-center">Loading product...</div>;
+    try {
+        const res = await fetch(`${baseUrl}/api/products/${id}`, { cache: 'no-store' });
+        if (!res.ok) return notFound();
+
+        const json = await res.json();
+        product = Array.isArray(json) ? json[0] : json;
+
+    } catch (err) {
+        return notFound();
     }
 
-    const hasImage = product.image && product.image.trim() !== '';
+    const hasImage = product?.image && product.image.trim() !== '';
 
     return (
         <div className="min-h-screen bg-gray-50 py-12 px-4 md:px-8">
             <div className="max-w-5xl mx-auto bg-white rounded-xl shadow-md p-6 md:p-10 grid md:grid-cols-2 gap-10">
-                {/* Product Image */}
                 <div className="relative w-full h-[400px] bg-gray-100 rounded-md overflow-hidden">
                     {hasImage ? (
                         <Image
@@ -49,7 +33,7 @@ export default function ProductDetail({ params }) {
                             className="object-contain p-6 transition-opacity duration-300"
                         />
                     ) : (
-                        <div className="w-full h-full animate-pulse flex items-center justify-center bg-gray-200 text-gray-500 text-sm">
+                        <div className="w-full h-full flex items-center justify-center bg-gray-200 text-gray-500">
                             <Image
                                 src="/assets/placeholder.jpg"
                                 alt="Placeholder"
@@ -61,7 +45,6 @@ export default function ProductDetail({ params }) {
                     )}
                 </div>
 
-                {/* Product Info */}
                 <div className="flex flex-col justify-between space-y-6">
                     <div>
                         <h1 className="text-3xl font-bold text-gray-800 mb-2">
@@ -77,13 +60,12 @@ export default function ProductDetail({ params }) {
                         )}
                     </div>
 
-                    {/* Buy Now Navigation */}
-                    <button
-                        onClick={() => router.push(`/order/${product.id}`)}
-                        className="w-full bg-[#D4AF37] hover:bg-[#b6982f] text-white font-semibold py-3 rounded-lg transition"
+                    <a
+                        href={`/order/${product.id}`}
+                        className="w-full text-center bg-[#D4AF37] hover:bg-[#b6982f] text-white font-semibold py-3 rounded-lg transition"
                     >
                         Buy Now
-                    </button>
+                    </a>
                 </div>
             </div>
         </div>

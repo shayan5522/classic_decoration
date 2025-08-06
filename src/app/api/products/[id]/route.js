@@ -1,16 +1,29 @@
 import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 
-// GET product by ID
-export async function GET(_, { params }) {
-    const product = await prisma.product.findUnique({
-        where: { id: parseInt(params.id) },
+// GET all products or products by category
+export async function GET(req, Request) {
+    const { searchParams } = new URL(req.url);
+    const categoryName = searchParams.get('category');
+
+    const products = await prisma.product.findMany({
+        where: categoryName
+            ? {
+                category: {
+                    name: {
+                        equals: categoryName,
+                        mode: 'insensitive',
+                    },
+                },
+            }
+            : undefined,
         include: { category: true },
+        orderBy: { createdAt: 'desc' },
     });
 
-    if (!product) return NextResponse.json({ error: 'Not found' }, { status: 404 });
-    return NextResponse.json(product);
+    return NextResponse.json(products);
 }
+
 
 // UPDATE product
 export async function PUT(req, { params }) {

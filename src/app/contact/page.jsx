@@ -1,8 +1,10 @@
 'use client';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 
 export default function ContactPage() {
     const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+    const [loading, setLoading] = useState(false);
 
     const handleChange = (e) => {
         setFormData((prev) => ({
@@ -11,10 +13,28 @@ export default function ContactPage() {
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(formData);
-        // TODO: Connect with your backend or Formspree
+        setLoading(true);
+
+        try {
+            const res = await fetch('/api/contact', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData),
+            });
+
+            if (res.ok) {
+                toast.success('Message sent successfully!');
+                setFormData({ name: '', email: '', message: '' });
+            } else {
+                toast.error('Failed to send message.');
+            }
+        } catch (error) {
+            toast.error('An unexpected error occurred.');
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -66,9 +86,14 @@ export default function ContactPage() {
 
                     <button
                         type="submit"
-                        className="w-full bg-yellow-600 text-white font-semibold py-2 px-6 rounded hover:bg-yellow-700 transition"
+                        disabled={loading}
+                        className={`w-full font-semibold py-2 px-6 rounded transition ${
+                            loading
+                                ? 'bg-yellow-400 cursor-not-allowed'
+                                : 'bg-yellow-600 hover:bg-yellow-700 text-white'
+                        }`}
                     >
-                        Send Message
+                        {loading ? 'Sending...' : 'Send Message'}
                     </button>
                 </form>
             </div>
