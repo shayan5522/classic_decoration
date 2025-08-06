@@ -1,26 +1,38 @@
-import { notFound } from 'next/navigation';
+'use client';
+import { notFound, useRouter } from 'next/navigation';
 import Image from 'next/image';
+import { useEffect, useState } from 'react';
 
-async function getProduct(id) {
-    try {
-        const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-        const res = await fetch(`${baseUrl}/api/products/${id}`, {
-            cache: 'no-store',
-        });
-        if (!res.ok) return null;
-        return res.json();
-    } catch (err) {
-        console.error('❌ Error fetching product:', err);
-        return null;
-    }
-}
-
-export default async function ProductDetail({ params }) {
+export default function ProductDetail({ params }) {
     const id = params.id;
-    if (!id) return notFound();
+    const router = useRouter();
+    const [product, setProduct] = useState(null);
+    const [loading, setLoading] = useState(true);
 
-    const product = await getProduct(id);
-    if (!product) return notFound();
+    useEffect(() => {
+        const getProduct = async () => {
+            try {
+                const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+                const res = await fetch(`${baseUrl}/api/products/${id}`, {
+                    cache: 'no-store',
+                });
+                if (!res.ok) return notFound();
+                const data = await res.json();
+                setProduct(data);
+            } catch (err) {
+                console.error('❌ Error fetching product:', err);
+                notFound();
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        if (id) getProduct();
+    }, [id]);
+
+    if (loading || !product) {
+        return <div className="p-10 text-center">Loading product...</div>;
+    }
 
     const hasImage = product.image && product.image.trim() !== '';
 
@@ -39,12 +51,8 @@ export default async function ProductDetail({ params }) {
                     ) : (
                         <div className="w-full h-full animate-pulse flex items-center justify-center bg-gray-200 text-gray-500 text-sm">
                             <Image
-                                src={
-                                    product.image && product.image.trim() !== ''
-                                        ? product.image
-                                        : '/assets/placeholder.jpg'
-                                }
-                                alt={product.name}
+                                src="/assets/placeholder.jpg"
+                                alt="Placeholder"
                                 width={400}
                                 height={300}
                                 className="w-full h-56 object-cover"
@@ -69,7 +77,11 @@ export default async function ProductDetail({ params }) {
                         )}
                     </div>
 
-                    <button className="w-full bg-[#D4AF37] hover:bg-[#b6982f] text-white font-semibold py-3 rounded-lg transition">
+                    {/* Buy Now Navigation */}
+                    <button
+                        onClick={() => router.push(`/order/${product.id}`)}
+                        className="w-full bg-[#D4AF37] hover:bg-[#b6982f] text-white font-semibold py-3 rounded-lg transition"
+                    >
                         Buy Now
                     </button>
                 </div>

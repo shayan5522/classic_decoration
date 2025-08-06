@@ -2,6 +2,8 @@ import "./globals.css";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Poppins } from "next/font/google";
 import LayoutWrapper from "@/components/LayoutWrapper";
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
 
 const poppins = Poppins({
     subsets: ["latin"],
@@ -34,6 +36,7 @@ export default function RootLayout({ children }) {
             className={`${geistSans.variable} ${geistMono.variable} ${poppins.variable}`}
         >
         <LayoutWrapper>{children}</LayoutWrapper>
+        <ToastContainer position="top-center" />
         </body>
         </html>
     );
