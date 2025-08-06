@@ -46,7 +46,7 @@ export default function ShopByCategories() {
     if (loading) return <div className="text-center py-16">Loading categories...</div>;
 
     return (
-        <section className="py-16 bg-white text-center">
+        <section id="categories"  className="py-16 bg-white text-center">
             <h2 className="text-3xl font-bold text-gray-800 mb-12">
                 Shop By <span className="text-[#D4AF37]">Categories</span>
             </h2>

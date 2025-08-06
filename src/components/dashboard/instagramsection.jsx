@@ -15,7 +15,7 @@ export default function InstagramSection() {
                     {/* Reel 1 */}
                     <div className="aspect-[9/16] w-full max-w-sm mx-auto">
                         <iframe
-                            src="https://www.instagram.com/reel/REEL_ID_1/embed"
+                            src="https://www.instagram.com/p/DM61p0PiQYs/embed"
                             className="w-full h-full border rounded-lg"
                             allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
                             allowFullScreen
@@ -25,7 +25,7 @@ export default function InstagramSection() {
                     {/* Reel 2 */}
                     <div className="aspect-[9/16] w-full max-w-sm mx-auto">
                         <iframe
-                            src="https://www.instagram.com/reel/REEL_ID_2/embed"
+                            src="https://www.instagram.com/p/DM0CtdqyuTt/embed"
                             className="w-full h-full border rounded-lg"
                             allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
                             allowFullScreen
@@ -35,7 +35,7 @@ export default function InstagramSection() {
                     {/* Reel 3 */}
                     <div className="aspect-[9/16] w-full max-w-sm mx-auto">
                         <iframe
-                            src="https://www.instagram.com/reel/REEL_ID_3/embed"
+                            src="https://www.instagram.com/p/DMzzvDLs8C7/embed"
                             className="w-full h-full border rounded-lg"
                             allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
                             allowFullScreen
