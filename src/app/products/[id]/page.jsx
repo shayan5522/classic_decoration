@@ -4,8 +4,8 @@ import Image from 'next/image';
 import { notFound } from 'next/navigation';
 
 export default async function ProductPage({ params }) {
-    const { id } = params;
-
+    const { id } = await params;
+    console.log("params from page.jsx",params);
     let product = null;
 
     try {
