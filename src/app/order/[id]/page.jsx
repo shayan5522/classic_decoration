@@ -7,6 +7,7 @@ import {toast} from "react-toastify";
 
 export default function OrderPage() {
     const { id } = useParams(); // ✅ fixed: use useParams in client component
+    console.log("product id from orders page",id)
     const router = useRouter();
 
     const [product, setProduct] = useState(null);
@@ -21,8 +22,9 @@ export default function OrderPage() {
     useEffect(() => {
         const fetchProduct = async () => {
             try {
-                const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+                const baseUrl = process.env.NEXT_PUBLIC_SITE_URL;
                 const res = await fetch(`${baseUrl}/api/products/${id}`);
+                console.log("Product from orders",res);
                 const data = await res.json();
                 console.log("Fetched product data:", data);
 
