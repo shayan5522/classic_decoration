@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import {prisma} from '@/lib/prisma';
 import cloudinary from '@/lib/cloudinary';
+import { Readable } from 'stream';
 
 export async function POST(req) {
     try {
@@ -25,14 +26,31 @@ export async function POST(req) {
         }
 
         // Upload proof image to Cloudinary
+        function bufferToStream(buffer) {
+            return new Readable({
+                read() {
+                    this.push(buffer);
+                    this.push(null);
+                },
+            });
+        }
+
         const arrayBuffer = await proofImage.arrayBuffer();
         const buffer = Buffer.from(arrayBuffer);
 
-        const base64Image = `data:${proofImage.type};base64,${buffer.toString('base64')}`;
+        const uploadRes = await new Promise((resolve, reject) => {
+            const uploadStream = cloudinary.uploader.upload_stream(
+                {
+                    folder: 'orders/proofs',
+                    resource_type: 'image',
+                },
+                (error, result) => {
+                    if (error) return reject(error);
+                    resolve(result);
+                }
+            );
 
-        const uploadRes = await cloudinary.uploader.upload(base64Image, {
-            folder: 'orders/proofs',
-            resource_type: 'image',
+            bufferToStream(buffer).pipe(uploadStream);
         });
 
         // Save order to DB
