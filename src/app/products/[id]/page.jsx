@@ -5,11 +5,11 @@ import { notFound } from 'next/navigation';
 
 export default async function ProductPage({ params }) {
     const { id } = await params;
-    console.log("params from page.jsx",params);
+    console.log("params from page.jsx",params.id);
     let product = null;
 
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/products/${id}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_LOCAL_SITE_URL }/api/products/${id}`, {
             cache: 'no-store',
         });
 
