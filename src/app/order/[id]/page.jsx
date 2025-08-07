@@ -4,6 +4,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import {toast} from "react-toastify";
+import {error} from "next/dist/build/output/log";
 
 export default function OrderPage() {
     const { id } = useParams(); // ✅ fixed: use useParams in client component
@@ -68,7 +69,9 @@ export default function OrderPage() {
             toast.success('🎉 Order placed successfully!');
             router.push('/thank_you');
         } else {
+            console.error('❌ Error placing order:', error.message, error.stack);
             toast.error('❌ Failed to place order. Please try again.');
+
         }
     };
 

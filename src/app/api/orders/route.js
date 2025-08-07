@@ -1,7 +1,16 @@
 import { NextResponse } from 'next/server';
-import {prisma} from '@/lib/prisma';
+import { prisma } from '@/lib/prisma';
 import cloudinary from '@/lib/cloudinary';
 import { Readable } from 'stream';
+
+function bufferToStream(buffer) {
+    return new Readable({
+        read() {
+            this.push(buffer);
+            this.push(null);
+        },
+    });
+}
 
 export async function POST(req) {
     try {
@@ -14,6 +23,15 @@ export async function POST(req) {
         const advanceAmount = parseFloat(formData.get('advanceAmount'));
         const proofImage = formData.get('proofImage');
 
+        console.log('➡️ Received form data:', {
+            customerName,
+            customerEmail,
+            phone,
+            productId,
+            advanceAmount,
+            proofImage: proofImage?.name,
+        });
+
         if (
             !customerName ||
             !customerEmail ||
@@ -22,38 +40,47 @@ export async function POST(req) {
             !advanceAmount ||
             !proofImage
         ) {
-            return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+            console.warn('⚠️ Missing required fields');
+            return NextResponse.json(
+                { error: 'Missing required fields' },
+                { status: 400 }
+            );
         }
 
-        // Upload proof image to Cloudinary
-        function bufferToStream(buffer) {
-            return new Readable({
-                read() {
-                    this.push(buffer);
-                    this.push(null);
-                },
-            });
-        }
-
+        // Convert image to buffer
         const arrayBuffer = await proofImage.arrayBuffer();
         const buffer = Buffer.from(arrayBuffer);
 
-        const uploadRes = await new Promise((resolve, reject) => {
-            const uploadStream = cloudinary.uploader.upload_stream(
-                {
-                    folder: 'orders/proofs',
-                    resource_type: 'image',
-                },
-                (error, result) => {
-                    if (error) return reject(error);
-                    resolve(result);
-                }
+        // Upload to Cloudinary
+        let uploadRes;
+        try {
+            uploadRes = await new Promise((resolve, reject) => {
+                const uploadStream = cloudinary.uploader.upload_stream(
+                    {
+                        folder: 'orders/proofs',
+                        resource_type: 'image',
+                    },
+                    (error, result) => {
+                        if (error) {
+                            console.error('❌ Cloudinary Upload Error:', error);
+                            return reject(error);
+                        }
+                        console.log('✅ Cloudinary upload successful:', result.secure_url);
+                        resolve(result);
+                    }
+                );
+
+                bufferToStream(buffer).pipe(uploadStream);
+            });
+        } catch (err) {
+            console.error('❌ Failed to upload to Cloudinary:', err.message);
+            return NextResponse.json(
+                { error: 'Image upload failed' },
+                { status: 500 }
             );
+        }
 
-            bufferToStream(buffer).pipe(uploadStream);
-        });
-
-        // Save order to DB
+        // Save order to database
         const newOrder = await prisma.order.create({
             data: {
                 customerName,
@@ -65,11 +92,19 @@ export async function POST(req) {
             },
         });
 
-        return NextResponse.json({ message: 'Order placed successfully', order: newOrder }, { status: 201 });
+        console.log('✅ Order saved:', newOrder.id);
 
+        return NextResponse.json(
+            { message: 'Order placed successfully', order: newOrder },
+            { status: 201 }
+        );
     } catch (error) {
-        console.error('❌ Error placing order:', error);
-        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+        console.error('❌ Error placing order:', error.message);
+        console.error(error.stack);
+        return NextResponse.json(
+            { error: 'Internal server error' },
+            { status: 500 }
+        );
     }
 }
 
@@ -83,9 +118,16 @@ export async function GET() {
                 createdAt: 'desc',
             },
         });
+
+        console.log('✅ Orders fetched:', orders.length);
+
         return Response.json(orders);
     } catch (error) {
-        console.error('Error fetching orders:', error);
-        return new Response(JSON.stringify({ error: 'Internal Server Error' }), { status: 500 });
+        console.error('❌ Error fetching orders:', error.message);
+        console.error(error.stack);
+        return new Response(
+            JSON.stringify({ error: 'Internal Server Error' }),
+            { status: 500 }
+        );
     }
 }
