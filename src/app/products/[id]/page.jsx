@@ -4,12 +4,16 @@ import Image from 'next/image';
 import { notFound } from 'next/navigation';
 
 export default async function ProductPage({ params }) {
-    const { id } = await params;
-    console.log("params from page.jsx",params.id);
+    const { id } = params;
+    console.log("params from page.jsx", params.id);
+
     let product = null;
+    const baseUrl = process.env.NODE_ENV === 'development'
+        ? process.env.NEXT_LOCAL_SITE_URL
+        : process.env.NEXT_PUBLIC_SITE_URL;
 
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_LOCAL_SITE_URL }/api/products/${id}`, {
+        const res = await fetch(`${baseUrl}/api/products/${id}`, {
             cache: 'no-store',
         });
 
@@ -21,6 +25,7 @@ export default async function ProductPage({ params }) {
     } catch (err) {
         return notFound();
     }
+
 
     const hasImage = product?.image && product.image.trim() !== '';
 

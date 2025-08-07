@@ -22,7 +22,7 @@ export default function OrderPage() {
     useEffect(() => {
         const fetchProduct = async () => {
             try {
-                const baseUrl = process.env.NEXT_PUBLIC_SITE_URL;
+                const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
                 const res = await fetch(`${baseUrl}/api/products/${id}`);
                 console.log("Product from orders",res);
                 const data = await res.json();
